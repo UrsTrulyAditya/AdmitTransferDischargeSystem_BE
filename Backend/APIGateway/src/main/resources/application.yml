@@ -1,0 +1,58 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: GATEWAY-SERVICE
+  cloud:
+    gateway:
+      default-filters:
+      - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            
+      discovery:
+         locator:
+            enabled: true
+    
+      routes:
+      - id: AdminMicroService
+        uri:
+         lb://AdminMicroService
+        predicates:
+      - Path=/admin/**
+      - id: AdmissionMicroService
+        uri: 
+          lb://AdmissionMicroService
+        predicates:
+      - Path=/admission/**
+      - id: DischargeMicroService
+        uri: 
+          lb://DischargeMicroService
+        predicates:
+      - Path=/discharge/**
+      - id: PatientMicroService
+        uri: 
+          lb://PatientMicroService
+        predicates:
+      - Path=/patient/**
+      - id: RoomMicroService
+        uri: 
+          lb://RoomMicroService
+        predicates:
+      - Path=/rooms/**
+      - id: TPAMicroService
+        uri: 
+          lb://TPAMicroService
+        predicates:
+      - Path=/tpa/**
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
